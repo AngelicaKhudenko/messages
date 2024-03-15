@@ -1,6 +1,7 @@
 package by.it_academy.jd2.messages.controller.http;
 
 import by.it_academy.jd2.messages.service.api.IUserService;
+import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
 import by.it_academy.jd2.messages.service.factory.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,8 +11,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-@WebServlet(urlPatterns = "/user")
+@WebServlet(urlPatterns = "/api/user")
 public class UserServlet extends HttpServlet {
     private final static String LOGIN_PARAM_NAME="login";
     private final static String PASSWORD_PARAM_NAME="password";
@@ -20,23 +24,36 @@ public class UserServlet extends HttpServlet {
 
     private final IUserService userService=ServiceFactory.getUserService();
 
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html; charset=UTF-8");
-
         String login=req.getParameter(LOGIN_PARAM_NAME);
         String password=req.getParameter(PASSWORD_PARAM_NAME);
 
-        String names=req.getParameter(NAMES_PARAM_NAME);
-        String dateOfBirth=req.getParameter(BIRTH_PARAM_NAME);
+        String []names=req.getParameter(NAMES_PARAM_NAME).trim().split(" +");
+        String birthDayRaw=req.getParameter(BIRTH_PARAM_NAME);
 
-        boolean savingResult=userService.save(login,password,names,dateOfBirth);
+        LocalDate birthDay;
         PrintWriter writer=resp.getWriter();
-        if (savingResult){
-            writer.write("<p>"+"Регистрация прошла успешно"+"</p");
-        } else {
-            writer.write("<p>"+"Пользователь с таким логином уже есть"+"</p");
+
+        try {
+            birthDay = LocalDate.parse(birthDayRaw, formatter);
+        } catch (DateTimeParseException e){
+            writer.write("<p>"+"Ошибка при чтении даты. Введите дату в формате ДД-ММ-ГГГГ"+"</p>");
+            resp.setStatus(400);
+            return;
+        }
+
+        RegistrationUserDTO user=new RegistrationUserDTO(login,password,names,birthDay);
+
+        try{
+            userService.create(user);
+            resp.setStatus(201);
+        } catch (IllegalArgumentException e){
+            writer.write("<p>"+"Ошибка регистрации: "+e.getMessage()+"</p>");
+            resp.setStatus(400);
+            return;
         }
     }
 }

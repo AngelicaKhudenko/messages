@@ -1,7 +1,11 @@
 package by.it_academy.jd2.messages.service;
 
+import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.service.api.ILoginService;
 import by.it_academy.jd2.messages.service.api.IUserService;
+import by.it_academy.jd2.messages.service.dto.LoginDTO;
+
+import java.util.Optional;
 
 public class LoginService implements ILoginService {
     private final IUserService userService;
@@ -10,12 +14,21 @@ public class LoginService implements ILoginService {
         this.userService = userService;
     }
 
+    private static final String WRONG_lOGIN_OR_PASSWORD="Введен неверный логин или пароль";
+
     @Override
-    public boolean checkUser(String login, String password) throws IllegalArgumentException{
-        if (login==null||password==null){
-            throw new IllegalArgumentException("Переданы некорректные значения. Заполните все поля");
+    public UserDTO login(LoginDTO loginDTO) {
+        Optional<UserDTO> optional = this.userService.getByLogin(loginDTO.getLogin());
+
+        if(optional.isEmpty()){
+            throw new IllegalArgumentException(WRONG_lOGIN_OR_PASSWORD);
         }
 
-        return userService.checkUser(login,password);
+        UserDTO user=optional.get();
+        if(!user.getPassword().equals(loginDTO.getPassword())){
+            throw new IllegalArgumentException(WRONG_lOGIN_OR_PASSWORD);
+        }
+
+        return user;
     }
 }

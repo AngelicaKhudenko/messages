@@ -1,9 +1,13 @@
 package by.it_academy.jd2.messages.service;
+import by.it_academy.jd2.messages.core.dto.UserDTOBuilder;
 import by.it_academy.jd2.messages.dao.api.IUserDao;
 import by.it_academy.jd2.messages.service.api.IUserService;
+import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
+import by.it_academy.jd2.messages.core.dto.UserDTO;
+import by.it_academy.jd2.messages.core.dto.UserRole;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class UserService implements IUserService {
     private final IUserDao userDao;
@@ -13,23 +17,55 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean save(String login, String password, String names, String birthInString) {
-        String []namesInArray=names.trim().split(" +");
-        if (namesInArray.length!=3){
-            throw new IllegalArgumentException("Необходимо ввести ФИО для регистрации");
+    public void create(UserDTO userDTO) {
+        if (userDTO.getRole()==null){
+            throw new IllegalArgumentException("Не задана роль пользователя");
         }
 
-        if (login==null||password==null){
-            throw new IllegalArgumentException("Переданы некорректные значения. Заполните все поля");
+        if (userDTO.getLogin()==null){
+            throw new IllegalArgumentException("Не задан логин пользователя");
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate dateOfBirth = LocalDate.parse(birthInString, formatter);
-        return userDao.save(login, password, namesInArray, dateOfBirth);
+        if (userDTO.getPassword()==null){
+            throw new IllegalArgumentException("Не задан пароль пользователя");
+        }
+
+        if (userDTO.getNames()==null){
+            throw new IllegalArgumentException("Не указано имя пользователя");
+        }
+
+        if (userDTO.getBirthday()==null){
+            throw new IllegalArgumentException("Не указана дата рождения пользователя");
+        }
+
+        if (userDTO.getRegistration()==null){
+            throw new IllegalArgumentException("Не указана дата регистрации пользователя");
+        }
+
+        Optional<UserDTO> userByLogin=userDao.getByLogin(userDTO.getLogin());
+
+        if (userByLogin.isPresent()){
+            throw new IllegalArgumentException("Пользователь с таким логином уже существует");
+        }
+
+        this.userDao.create(userDTO);
     }
 
     @Override
-    public boolean checkUser(String login, String password) {
-        return userDao.checkUser(login,password);
+    public void create(RegistrationUserDTO registrationUserDTO) {
+        UserDTO userDTO=UserDTOBuilder.builder().setLogin(registrationUserDTO.getLogin())
+                .setPassword(registrationUserDTO.getPassword())
+                .setNames(registrationUserDTO.getNames())
+                .setBirthday(registrationUserDTO.getBirthday())
+                .setRole(UserRole.USER)
+                .setRegistration(LocalDateTime.now())
+                .build();
+
+        create(userDTO);
+    }
+
+    @Override
+    public Optional<UserDTO> getByLogin(String login) {
+        return this.userDao.getByLogin(login);
     }
 }

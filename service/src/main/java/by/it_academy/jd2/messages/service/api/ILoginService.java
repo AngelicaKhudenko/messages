@@ -1,14 +1,14 @@
 package by.it_academy.jd2.messages.service.api;
 
+import by.it_academy.jd2.messages.core.dto.UserDTO;
+import by.it_academy.jd2.messages.service.dto.LoginDTO;
+
 public interface ILoginService {
+
     /**
-     * Метод, проверяющий, есть ли переданный пользователь в системе,
-     * а также в случае наличия такого логина, проверяет правильность пароля
-     * @param login - логин
-     * @param password - пароль
-     * @return true - пользователь в системе есть, пароль верный
-     *         false - пользователя в системе нет или пароль неверный
-     * @throws IllegalArgumentException
+     * Метод, возвращающий пользователя, соответствующего переданному паролю и логину в объекте LoginDTO
+     * @param loginDTO - логин и пароль пользователя в объекте LoginDTO
+     * @return - пользователь, соответствующий переданным логину и паролю
      */
-    boolean checkUser(String login, String password) throws IllegalArgumentException;
+    UserDTO login(LoginDTO loginDTO);
 }
