@@ -1,5 +1,6 @@
-package by.it_academy.jd2.messages.controller.http;
+package by.it_academy.jd2.messages.controller.http.api;
 
+import by.it_academy.jd2.messages.controller.utils.SessionUtils;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.service.api.ILoginService;
 import by.it_academy.jd2.messages.service.dto.LoginDTO;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
@@ -25,10 +25,10 @@ public class LoginServlet extends HttpServlet {
         String password=req.getParameter(PASSWORD_PARAM_NAME);
 
         LoginDTO loginDTO=new LoginDTO(login,password);
-        PrintWriter writer=resp.getWriter();
 
         UserDTO userDTO=this.loginService.login(loginDTO);
         HttpSession session = req.getSession();
-        session.setAttribute("user", userDTO);
+
+        SessionUtils.saveUser(session, userDTO);
     }
 }

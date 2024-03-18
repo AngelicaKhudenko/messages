@@ -1,6 +1,8 @@
 package by.it_academy.jd2.messages.service.api;
 
 import by.it_academy.jd2.messages.core.dto.MessageDTO;
+import by.it_academy.jd2.messages.core.dto.UserDTO;
+import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface IMessageService {
 
     /**
      * Метод, отправляющий сообщение
-     * @param messageDTO - сообщение для отправки
+     * @param sendMessageDTO - сообщение для отправки
      */
-    void send(MessageDTO messageDTO);
+    void send(UserDTO userDTO, SendMessageDTO sendMessageDTO);
 }

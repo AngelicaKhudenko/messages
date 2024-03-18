@@ -5,6 +5,7 @@ import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.dao.api.IMessageDao;
 import by.it_academy.jd2.messages.service.api.IMessageService;
 import by.it_academy.jd2.messages.service.api.IUserService;
+import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,17 +26,30 @@ public class MessageService implements IMessageService {
     }
 
     @Override
-    public void send(MessageDTO messageDTO) {
-        if (messageDTO==null){
+    public void send(UserDTO userDTO, SendMessageDTO sendMessageDTO) {
+        if (sendMessageDTO==null){
             throw new IllegalArgumentException("Сообщение не должно быть пустым");
         }
 
-        Optional<UserDTO> user=userService.getByLogin(messageDTO.getAddressee());
-        if (user.isEmpty()){
-            throw new IllegalArgumentException("Пользователя с таким логином не существует");
+        MessageDTO messageDTO= MessageDTO.builder()
+                .sender(userDTO.getLogin())
+                .addressee(sendMessageDTO.getAddressee())
+                .text(sendMessageDTO.getText())
+                .post(LocalDateTime.now())
+                .build();
+
+        Optional<UserDTO> userSender=userService.getByLogin(userDTO.getLogin());
+        Optional<UserDTO> userAddressee=userService.getByLogin(sendMessageDTO.getAddressee());
+
+
+        if (userSender.isEmpty()){
+            throw new IllegalArgumentException("Пользователя-отправителя сообщения с таким логином не существует");
         }
 
-        messageDTO.setPost(LocalDateTime.now());
+        if (userAddressee.isEmpty()){
+            throw new IllegalArgumentException("Пользователя-получателя сообщения с таким логином не существует");
+        }
+
         messageDao.create(messageDTO);
     }
 }

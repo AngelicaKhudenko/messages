@@ -1,9 +1,11 @@
 package by.it_academy.jd2.messages.service;
 
 import by.it_academy.jd2.messages.core.dto.MessageDTO;
+import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.service.api.IMessageService;
 import by.it_academy.jd2.messages.service.api.IUserService;
 import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
+import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 import by.it_academy.jd2.messages.service.factory.ServiceFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 public class MessageServiceTest {
     @Test
@@ -56,10 +59,22 @@ public class MessageServiceTest {
         RegistrationUserDTO addressee=new RegistrationUserDTO(loginAddressee,passwordAddressee, namesAddressee,birthday);
         userService.create(addressee);
 
-        MessageDTO messageDTO=new MessageDTO(loginSender,loginAddressee,"Привет");
-        messageService.send(messageDTO);
+        SendMessageDTO sendMessageDTO=SendMessageDTO.builder()
+                .text("Привет")
+                .addressee(loginAddressee)
+                .build();
+
+        Optional<UserDTO> userDTO=userService.getByLogin(loginSender);
+
+        UserDTO user=null;
+        if (userDTO.isPresent()){
+            user=userDTO.get();
+        }
+
+        messageService.send(user,sendMessageDTO);
 
         List<MessageDTO> messages=messageService.getByUser(loginAddressee);
-        Assertions.assertEquals(messages.get(0),messageDTO);
+        Assertions.assertEquals(messages.get(0).getText(),sendMessageDTO.getText());
+        Assertions.assertEquals(messages.get(0).getSender(),loginSender);
     }
 }

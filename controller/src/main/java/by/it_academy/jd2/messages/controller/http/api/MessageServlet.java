@@ -1,9 +1,11 @@
-package by.it_academy.jd2.messages.controller.http;
+package by.it_academy.jd2.messages.controller.http.api;
 
+import by.it_academy.jd2.messages.controller.utils.SessionUtils;
 import by.it_academy.jd2.messages.core.dto.MessageDTO;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.core.exceptions.UnauthorizedException;
 import by.it_academy.jd2.messages.service.api.IMessageService;
+import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 import by.it_academy.jd2.messages.service.factory.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,16 +33,18 @@ public class MessageServlet extends HttpServlet {
             throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
 
-        UserDTO userDTO=(UserDTO) session.getAttribute("user");
+        UserDTO userDTO=SessionUtils.giveUser(session);
         List<MessageDTO> messages=messageService.getByUser(userDTO.getLogin());
 
         if (messages==null){
-            writer.write("<p>"+"Сообщений нет"+"</p>");
+            writer.write("<p>Сообщений нет"+"</p>");
             return;
         }
 
-        for (int i=0; i<messages.size(); i++){
-            writer.write("<p>"+messages.get(i).toString()+"</p>");
+        for (MessageDTO messageDTO:messages){
+            writer.write("<p>Время отправки сообщения: "+messageDTO.getPost()+"</p>");
+            writer.write("<p>Отправитель сообщения: "+messageDTO.getSender()+"</p>");
+            writer.write("<p>Текст сообщения: "+messageDTO.getText()+"</p>");
         }
     }
 
@@ -53,19 +57,23 @@ public class MessageServlet extends HttpServlet {
             throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
 
-        UserDTO sender=(UserDTO) session.getAttribute("user");
+        UserDTO sender=SessionUtils.giveUser(session);
 
         String login=req.getParameter(LOGIN_PARAM_NAME);
         String text=req.getParameter(TEXT_PARAM_NAME);
 
-        if (login==null){
+        if (login==null||login.isBlank()){
             throw new IllegalArgumentException("Введите логин пользователя");
         }
 
-        MessageDTO messageDTO=new MessageDTO(sender.getLogin(),login,text);
+        SendMessageDTO sendMessageDTO=SendMessageDTO.builder()
+                .addressee(login)
+                .text(text)
+                .build();
 
-        messageService.send(messageDTO);
+        messageService.send(sender,sendMessageDTO);
 
-        writer.write("<p>"+"Сообщение доставлено успешно"+"</p>");
+        resp.setStatus(201);
+        writer.write("<p>Сообщение доставлено успешно"+"</p>");
     }
 }

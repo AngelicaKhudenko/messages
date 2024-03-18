@@ -22,16 +22,22 @@ public class UserService implements IUserService {
             throw new IllegalArgumentException("Не задана роль пользователя");
         }
 
-        if (userDTO.getLogin()==null){
+        if (userDTO.getLogin()==null||userDTO.getLogin().isBlank()){
             throw new IllegalArgumentException("Не задан логин пользователя");
         }
 
-        if (userDTO.getPassword()==null){
+        if (userDTO.getPassword()==null||userDTO.getPassword().isBlank()){
             throw new IllegalArgumentException("Не задан пароль пользователя");
         }
 
         if (userDTO.getNames()==null){
             throw new IllegalArgumentException("Не указано имя пользователя");
+        }
+
+        for (String name: userDTO.getNames()) {
+            if(name.isBlank()){
+                throw new IllegalArgumentException("Не указано имя пользователя");
+            }
         }
 
         if (userDTO.getBirthday()==null){

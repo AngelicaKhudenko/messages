@@ -1,4 +1,4 @@
-package by.it_academy.jd2.messages.controller.http;
+package by.it_academy.jd2.messages.controller.http.api;
 
 import by.it_academy.jd2.messages.service.api.IUserService;
 import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +34,6 @@ public class UserServlet extends HttpServlet {
         String birthDayRaw=req.getParameter(BIRTH_PARAM_NAME);
 
         LocalDate birthDay;
-        PrintWriter writer=resp.getWriter();
 
         try {
             birthDay = LocalDate.parse(birthDayRaw, formatter);
