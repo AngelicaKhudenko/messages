@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
@@ -30,5 +31,8 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         SessionUtils.saveUser(session, userDTO);
+        PrintWriter writer=resp.getWriter();
+
+        writer.write("Вход выполнен успешно");
     }
 }
