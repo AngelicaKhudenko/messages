@@ -40,20 +40,12 @@ public class UserServlet extends HttpServlet {
         try {
             birthDay = LocalDate.parse(birthDayRaw, formatter);
         } catch (DateTimeParseException e){
-            writer.write("<p>"+"Ошибка при чтении даты. Введите дату в формате ДД-ММ-ГГГГ"+"</p>");
-            resp.setStatus(400);
-            return;
+            throw new IllegalArgumentException("Ошибка при чтении даты. Введите дату в формате ДД-ММ-ГГГГ");
         }
 
         RegistrationUserDTO user=new RegistrationUserDTO(login,password,names,birthDay);
 
-        try{
-            userService.create(user);
-            resp.setStatus(201);
-        } catch (IllegalArgumentException e){
-            writer.write("<p>"+"Ошибка регистрации: "+e.getMessage()+"</p>");
-            resp.setStatus(400);
-            return;
-        }
+        userService.create(user);
+        resp.setStatus(201);
     }
 }

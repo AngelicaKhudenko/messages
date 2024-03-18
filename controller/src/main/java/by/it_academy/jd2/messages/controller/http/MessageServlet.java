@@ -2,6 +2,7 @@ package by.it_academy.jd2.messages.controller.http;
 
 import by.it_academy.jd2.messages.core.dto.MessageDTO;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
+import by.it_academy.jd2.messages.core.exceptions.UnauthorizedException;
 import by.it_academy.jd2.messages.service.api.IMessageService;
 import by.it_academy.jd2.messages.service.factory.ServiceFactory;
 import jakarta.servlet.ServletException;
@@ -26,10 +27,8 @@ public class MessageServlet extends HttpServlet {
         HttpSession session = req.getSession();
         PrintWriter writer=resp.getWriter();
 
-        if (session.isNew()){
-            writer.write(AUTHORIZATION_MISTAKE_MESSAGE);
-            resp.setStatus(401);
-            return;
+        if (session.isNew()) {
+            throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
 
         UserDTO userDTO=(UserDTO) session.getAttribute("user");
@@ -50,10 +49,8 @@ public class MessageServlet extends HttpServlet {
         HttpSession session = req.getSession();
         PrintWriter writer=resp.getWriter();
 
-        if (session.isNew()){
-            writer.write(AUTHORIZATION_MISTAKE_MESSAGE);
-            resp.setStatus(401);
-            return;
+        if (session.isNew()) {
+            throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
 
         UserDTO sender=(UserDTO) session.getAttribute("user");
@@ -62,18 +59,12 @@ public class MessageServlet extends HttpServlet {
         String text=req.getParameter(TEXT_PARAM_NAME);
 
         if (login==null){
-            writer.write("<p>"+"Введите логин пользователя"+"<p>");
-            resp.setStatus(400);
-            return;
+            throw new IllegalArgumentException("Введите логин пользователя");
         }
 
         MessageDTO messageDTO=new MessageDTO(sender.getLogin(),login,text);
 
-        try{
-            messageService.send(messageDTO);
-        } catch (IllegalArgumentException e){
-            writer.write("<p>"+"Ошибка при отправке сообщения: "+e.getMessage()+"</p>");
-        }
+        messageService.send(messageDTO);
 
         writer.write("<p>"+"Сообщение доставлено успешно"+"</p>");
     }

@@ -27,14 +27,8 @@ public class LoginServlet extends HttpServlet {
         LoginDTO loginDTO=new LoginDTO(login,password);
         PrintWriter writer=resp.getWriter();
 
-        try {
-            UserDTO userDTO=this.loginService.login(loginDTO);
-            HttpSession session = req.getSession();
-            session.setAttribute("user", userDTO);
-        } catch (IllegalArgumentException e){
-            writer.write("<p>"+"Ошибка входа: "+e.getMessage()+"</p>");
-            resp.setStatus(400);
-            return;
-        }
+        UserDTO userDTO=this.loginService.login(loginDTO);
+        HttpSession session = req.getSession();
+        session.setAttribute("user", userDTO);
     }
 }
