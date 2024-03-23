@@ -30,10 +30,11 @@ public class SessionUtils {
         }
 
         Object attribute=httpSession.getAttribute(USER_ATTRIBUTE);
-        if (attribute instanceof UserDTO){
-            return (UserDTO) attribute;
-        } else {
-            throw new IllegalStateException("Ошибка в считывании сессии");
+
+        if (attribute==null){
+            return null;
         }
+
+        return (UserDTO) attribute;
     }
 }

@@ -5,6 +5,7 @@ import by.it_academy.jd2.messages.core.dto.MessageDTO;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.core.exceptions.UnauthorizedException;
 import by.it_academy.jd2.messages.service.api.IMessageService;
+import by.it_academy.jd2.messages.service.api.IStatisticsService;
 import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 import by.it_academy.jd2.messages.service.factory.ServiceFactory;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,7 @@ import java.util.List;
 @WebServlet(urlPatterns = "/api/message")
 public class MessageServlet extends HttpServlet {
     private final IMessageService messageService= ServiceFactory.getMessageService();
+    private final IStatisticsService statisticsService=ServiceFactory.getStatisticsService();
     private final static String LOGIN_PARAM_NAME="login";
     private final static String TEXT_PARAM_NAME="text";
     private static final String AUTHORIZATION_MISTAKE_MESSAGE="Не выполнен вход в программу. Необходимо авторизоваться";
@@ -73,6 +75,7 @@ public class MessageServlet extends HttpServlet {
 
         messageService.send(sender,sendMessageDTO);
 
+        statisticsService.addMessage();
         resp.setStatus(201);
         writer.write("<p>Сообщение доставлено успешно"+"</p>");
     }

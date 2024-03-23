@@ -1,5 +1,6 @@
 package by.it_academy.jd2.messages.controller.http.api;
 
+import by.it_academy.jd2.messages.service.api.IStatisticsService;
 import by.it_academy.jd2.messages.service.api.IUserService;
 import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
 import by.it_academy.jd2.messages.service.factory.ServiceFactory;
@@ -22,8 +23,8 @@ public class UserServlet extends HttpServlet {
     private final static String BIRTH_PARAM_NAME="birth";
 
     private final IUserService userService=ServiceFactory.getUserService();
-
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final IStatisticsService statisticsService=ServiceFactory.getStatisticsService();
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,12 +39,14 @@ public class UserServlet extends HttpServlet {
         try {
             birthDay = LocalDate.parse(birthDayRaw, formatter);
         } catch (DateTimeParseException e){
-            throw new IllegalArgumentException("Ошибка при чтении даты. Введите дату в формате ДД-ММ-ГГГГ");
+            throw new IllegalArgumentException("Ошибка при чтении даты. Введите дату в формате ГГГГ-ММ-ДД");
         }
 
         RegistrationUserDTO user=new RegistrationUserDTO(login,password,names,birthDay);
 
         userService.create(user);
+
+        statisticsService.addUser();
         resp.setStatus(201);
     }
 }
