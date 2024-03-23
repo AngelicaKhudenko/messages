@@ -35,7 +35,7 @@ public class ExceptionHandlerFilter implements Filter {
             }
         } catch (Exception e){
             PrintWriter writer=servletResponse.getWriter();
-            writer.write("<p>"+"Ошибка на сервере</p>"+e);
+            writer.write("<p>"+"Ошибка на сервере</p>");
 
             if (servletResponse instanceof HttpServletResponse) {
                 HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
