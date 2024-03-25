@@ -3,6 +3,8 @@ package by.it_academy.jd2.messages.controller.utils;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.Optional;
+
 public class SessionUtils {
     private final static String USER_ATTRIBUTE = "user";
 
@@ -24,17 +26,13 @@ public class SessionUtils {
      * @param httpSession - сессия
      * @return - пользователь UserDTO
      */
-    public static UserDTO giveUser(HttpSession httpSession){
+    public static Optional<UserDTO> giveUser(HttpSession httpSession){
         if (httpSession==null){
             throw new IllegalStateException("Сессия отсутствует");
         }
 
         Object attribute=httpSession.getAttribute(USER_ATTRIBUTE);
 
-        if (attribute==null){
-            return null;
-        }
-
-        return (UserDTO) attribute;
+        return Optional.ofNullable((UserDTO) attribute);
     }
 }

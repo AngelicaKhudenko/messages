@@ -21,7 +21,9 @@ public class LoginServlet extends HttpServlet {
     private final static String PASSWORD_PARAM_NAME="password";
     private final ILoginService loginService=ServiceFactory.getLoginService();
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req,
+                          HttpServletResponse resp) throws ServletException, IOException {
+
         String login=req.getParameter(LOGIN_PARAM_NAME);
         String password=req.getParameter(PASSWORD_PARAM_NAME);
 
@@ -33,6 +35,6 @@ public class LoginServlet extends HttpServlet {
         SessionUtils.saveUser(session, userDTO);
         PrintWriter writer=resp.getWriter();
 
-        writer.write("Вход выполнен успешно");
+        writer.write("<p>Вход выполнен успешно</p>");
     }
 }

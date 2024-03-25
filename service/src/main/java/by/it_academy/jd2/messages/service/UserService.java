@@ -1,6 +1,8 @@
 package by.it_academy.jd2.messages.service;
+
 import by.it_academy.jd2.messages.core.dto.UserDTOBuilder;
 import by.it_academy.jd2.messages.dao.api.IUserDao;
+import by.it_academy.jd2.messages.service.api.IStatisticsService;
 import by.it_academy.jd2.messages.service.api.IUserService;
 import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
@@ -11,9 +13,11 @@ import java.util.Optional;
 
 public class UserService implements IUserService {
     private final IUserDao userDao;
+    private final IStatisticsService statisticsService;
 
-    public UserService(IUserDao userDao) {
+    public UserService(IUserDao userDao,IStatisticsService statisticsService) {
         this.userDao = userDao;
+        this.statisticsService=statisticsService;
     }
 
     @Override
@@ -55,6 +59,7 @@ public class UserService implements IUserService {
         }
 
         this.userDao.create(userDTO);
+        statisticsService.addUser();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package by.it_academy.jd2.messages.controller.filter;
 
 import by.it_academy.jd2.messages.controller.utils.SessionUtils;
-import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.core.dto.UserRole;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -14,7 +13,10 @@ import java.io.IOException;
 @WebFilter(urlPatterns = {"/ui/admin/*","/api/admin/*"})
 public class AdminSecurityFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest req=(HttpServletRequest)request;
         HttpServletResponse resp=(HttpServletResponse) response;
 
@@ -40,11 +42,10 @@ public class AdminSecurityFilter implements Filter {
             return false;
         }
 
-        UserDTO userDTO=SessionUtils.giveUser(session);
-        if (userDTO==null){
+        if (SessionUtils.giveUser(session).isEmpty()){
             return false;
         }
 
-        return UserRole.ADMIN.equals(userDTO.getRole());
+        return UserRole.ADMIN.equals(SessionUtils.giveUser(session).get().getRole());
     }
 }

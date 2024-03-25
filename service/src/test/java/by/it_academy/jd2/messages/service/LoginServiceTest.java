@@ -19,11 +19,11 @@ public class LoginServiceTest {
     public void testOnLogging(){
         IUserService userService=ServiceFactory.getUserService();
         ILoginService loginService=ServiceFactory.getLoginService();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         String login="ivanova";
         String password="otodnogodovosmi";
         String []names="Иванова Светлана Андреевна".trim().split(" +");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate birthday=LocalDate.parse("11-03-1999",formatter);
 
         RegistrationUserDTO registrationUserDTO=new RegistrationUserDTO(login,password,names,birthday);
@@ -32,7 +32,6 @@ public class LoginServiceTest {
         LoginDTO loginDTO=new LoginDTO(login,password);
 
         UserDTO user=loginService.login(loginDTO);
-
         Assertions.assertEquals(user.getNames(),names);
     }
 }

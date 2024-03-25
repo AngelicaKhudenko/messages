@@ -5,6 +5,7 @@ import by.it_academy.jd2.messages.core.dto.MessageDTO;
 import java.util.List;
 
 public interface IMessageDao {
+
     /**
      * Возвращает список сообщений пользователя с заданным логином
      * @param login - логин пользователя, сообщения которого запрашиваются

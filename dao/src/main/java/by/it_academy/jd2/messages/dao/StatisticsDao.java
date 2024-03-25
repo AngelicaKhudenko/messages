@@ -10,7 +10,7 @@ public class StatisticsDao implements IStatisticsDao {
     private Long messages;
     private Long users;
     private Long activeUsers;
-    private final IUserDao userDao= DaoFactory.getUserDao();
+    private final IUserDao userDao=DaoFactory.getUserDao();
     private final IMessageDao messageDao=DaoFactory.getMessageDao();
 
     public StatisticsDao(Long messages, Long users, Long activeUsers) {
@@ -24,7 +24,6 @@ public class StatisticsDao implements IStatisticsDao {
         this.users = 0L;
         this.activeUsers=0L;
     }
-
 
     @Override
     public StatisticsDTO get() {

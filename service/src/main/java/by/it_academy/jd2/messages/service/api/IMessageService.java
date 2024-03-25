@@ -7,6 +7,7 @@ import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 import java.util.List;
 
 public interface IMessageService {
+
     /**
      * Метод, возвращающий список сообщений пользователя по его логину
      * @param login - логин пользователя

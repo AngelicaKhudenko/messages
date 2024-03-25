@@ -63,6 +63,6 @@
             </plugin>
         </plugins>
 
-        <finalName>messages##${parent.version}</finalName>
+        <finalName>messages##${project.parent.version}</finalName>
     </build>
 </project>

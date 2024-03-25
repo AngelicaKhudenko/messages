@@ -4,6 +4,7 @@ import by.it_academy.jd2.messages.core.dto.MessageDTO;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.dao.api.IMessageDao;
 import by.it_academy.jd2.messages.service.api.IMessageService;
+import by.it_academy.jd2.messages.service.api.IStatisticsService;
 import by.it_academy.jd2.messages.service.api.IUserService;
 import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
 
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class MessageService implements IMessageService {
     private final IMessageDao messageDao;
     private final IUserService userService;
+    private final IStatisticsService statisticsService;
 
-    public MessageService(IMessageDao messageDao,IUserService userService) {
+    public MessageService(IMessageDao messageDao,IUserService userService, IStatisticsService statisticsService) {
         this.messageDao = messageDao;
         this.userService=userService;
+        this.statisticsService=statisticsService;
     }
 
     @Override
@@ -51,5 +54,6 @@ public class MessageService implements IMessageService {
         }
 
         messageDao.create(messageDTO);
+        statisticsService.addMessage();
     }
 }

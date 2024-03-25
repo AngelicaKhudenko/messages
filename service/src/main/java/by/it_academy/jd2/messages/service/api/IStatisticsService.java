@@ -1,16 +1,14 @@
 package by.it_academy.jd2.messages.service.api;
 
 import by.it_academy.jd2.messages.core.dto.StatisticsDTO;
-import by.it_academy.jd2.messages.core.exceptions.UnauthorizedException;
-import by.it_academy.jd2.messages.service.dto.LoginDTO;
 
 public interface IStatisticsService {
+
     /**
      * Метод, возвращающий статистику приложения в виде объекта класса StatisticsDTO
-     * @param loginDTO - логин и пароль пользователя, заправшивающий статистику
      * @return - статистика приложения в виде объекта класса StatisticsDTO
      */
-    StatisticsDTO get(LoginDTO loginDTO) throws UnauthorizedException;
+    StatisticsDTO get();
     /**
      * Метод, увеличивающий количество сообщений в статистике приложения на один
      */

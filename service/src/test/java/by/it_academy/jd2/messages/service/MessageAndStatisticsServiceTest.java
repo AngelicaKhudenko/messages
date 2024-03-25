@@ -3,6 +3,7 @@ package by.it_academy.jd2.messages.service;
 import by.it_academy.jd2.messages.core.dto.MessageDTO;
 import by.it_academy.jd2.messages.core.dto.UserDTO;
 import by.it_academy.jd2.messages.service.api.IMessageService;
+import by.it_academy.jd2.messages.service.api.IStatisticsService;
 import by.it_academy.jd2.messages.service.api.IUserService;
 import by.it_academy.jd2.messages.service.dto.RegistrationUserDTO;
 import by.it_academy.jd2.messages.service.dto.SendMessageDTO;
@@ -16,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-public class MessageServiceTest {
+public class MessageAndStatisticsServiceTest {
     @Test
     @DisplayName("Тестирование на получение пустого списка сообщений")
     public void testOnGettingEmptyMessage(){
@@ -37,10 +38,11 @@ public class MessageServiceTest {
     }
 
     @Test
-    @DisplayName("Тестирование на отправку и получение сообщения")
+    @DisplayName("Тестирование на отправку и получение сообщения, а также на получение статистики по сообщениям")
     public void testOnSendingAndGettingExistingMessage(){
         IUserService userService=ServiceFactory.getUserService();
         IMessageService messageService=ServiceFactory.getMessageService();
+        IStatisticsService statisticsService=ServiceFactory.getStatisticsService();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         String loginSender="sveta";
@@ -76,5 +78,6 @@ public class MessageServiceTest {
         List<MessageDTO> messages=messageService.getByUser(loginAddressee);
         Assertions.assertEquals(messages.get(0).getText(),sendMessageDTO.getText());
         Assertions.assertEquals(messages.get(0).getSender(),loginSender);
+        Assertions.assertEquals(1,statisticsService.get().getMessages());
     }
 }

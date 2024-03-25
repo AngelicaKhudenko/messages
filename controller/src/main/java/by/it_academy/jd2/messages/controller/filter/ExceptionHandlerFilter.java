@@ -27,7 +27,7 @@ public class ExceptionHandlerFilter implements Filter {
             }
         } catch (UnauthorizedException e){
             PrintWriter writer=servletResponse.getWriter();
-            writer.write("<p>"+"Ошибка авторизации: "+e.getMessage()+"</p>");
+            writer.write("<p>Ошибка авторизации: "+e.getMessage()+"</p>");
 
             if (servletResponse instanceof HttpServletResponse) {
                 HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
@@ -35,7 +35,7 @@ public class ExceptionHandlerFilter implements Filter {
             }
         } catch (Exception e){
             PrintWriter writer=servletResponse.getWriter();
-            writer.write("<p>"+"Ошибка на сервере</p>");
+            writer.write("<p>Ошибка на сервере</p>");
 
             if (servletResponse instanceof HttpServletResponse) {
                 HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;

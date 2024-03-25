@@ -39,7 +39,7 @@ public class ServiceFactory {
         if (messageService==null){
             synchronized (ServiceFactory.class){
                 if (messageService==null){
-                    messageService=new MessageService(DaoFactory.getMessageDao(),getUserService());
+                    messageService=new MessageService(DaoFactory.getMessageDao(),getUserService(),getStatisticsService());
                 }
             }
         }
@@ -55,7 +55,7 @@ public class ServiceFactory {
         if (userService==null){
             synchronized (ServiceFactory.class){
                 if (userService==null){
-                    userService=new UserService(DaoFactory.getUserDao());
+                    userService=new UserService(DaoFactory.getUserDao(),getStatisticsService());
                 }
             }
         }
@@ -71,7 +71,7 @@ public class ServiceFactory {
         if (statisticsService==null){
             synchronized (ServiceFactory.class){
                 if (statisticsService==null){
-                    statisticsService=new StatisticsService(DaoFactory.getStatisticsDao(),getUserService());
+                    statisticsService=new StatisticsService(DaoFactory.getStatisticsDao());
                 }
             }
         }

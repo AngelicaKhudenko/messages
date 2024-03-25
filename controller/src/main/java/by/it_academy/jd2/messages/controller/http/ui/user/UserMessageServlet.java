@@ -10,6 +10,7 @@ import java.io.IOException;
 public class UserMessageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, jakarta.servlet.http.HttpServletResponse resp) throws ServletException, IOException {
+
         req.getRequestDispatcher("/ui/user/message.jsp").forward(req,resp);
     }
 }

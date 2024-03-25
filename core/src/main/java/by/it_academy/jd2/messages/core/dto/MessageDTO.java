@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class MessageDTO {
+
     private LocalDateTime post;
     private String sender;
     private String addressee;

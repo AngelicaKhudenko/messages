@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 public class StatisticsDTO {
+
     private long users;
     private long activeUsers;
     private long messages;
