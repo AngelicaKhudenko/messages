@@ -22,7 +22,7 @@ public class UserSecurityFilter implements Filter {
         String contextPath=req.getContextPath();
         HttpSession session=req.getSession();
 
-        if ((session!=null)&&(SessionUtils.giveUser(session) !=null)){
+        if ((session!=null)&&(SessionUtils.giveUser(session).isPresent())){
             chain.doFilter(req,resp);
         } else {
             resp.sendRedirect(contextPath+"/ui/signIn");

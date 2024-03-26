@@ -9,12 +9,11 @@ import java.util.Optional;
 
 public class LoginService implements ILoginService {
     private final IUserService userService;
+    private static final String WRONG_lOGIN_OR_PASSWORD="Введен неверный логин или пароль";
 
     public LoginService(IUserService userService) {
         this.userService = userService;
     }
-
-    private static final String WRONG_lOGIN_OR_PASSWORD="Введен неверный логин или пароль";
 
     @Override
     public UserDTO login(LoginDTO loginDTO) {

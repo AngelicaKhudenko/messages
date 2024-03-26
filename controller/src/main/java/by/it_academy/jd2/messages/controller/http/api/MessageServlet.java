@@ -29,20 +29,16 @@ public class MessageServlet extends HttpServlet {
                          HttpServletResponse resp) throws ServletException, IOException {
 
         Optional<UserDTO> optional=SessionUtils.giveUser(req.getSession());
-        UserDTO userDTO;
 
-        if (optional.isPresent()){
-            userDTO=optional.get();
-        } else {
+        if (optional.isEmpty()){
             throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
 
+        List<MessageDTO> messages=messageService.getByUser(optional.get().getLogin());
         PrintWriter writer=resp.getWriter();
 
-        List<MessageDTO> messages=messageService.getByUser(userDTO.getLogin());
-
         if (messages==null){
-            writer.write("<p>Сообщений нет"+"</p>");
+            writer.write("<p>Сообщений нет</p>");
             return;
         }
 
@@ -58,13 +54,12 @@ public class MessageServlet extends HttpServlet {
                           HttpServletResponse resp) throws ServletException, IOException {
 
         Optional<UserDTO> optional=SessionUtils.giveUser(req.getSession());
-        UserDTO sender;
 
-        if (optional.isPresent()){
-            sender=optional.get();
-        } else {
+        if (optional.isEmpty()){
             throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
+
+        UserDTO sender=optional.get();
 
         PrintWriter writer=resp.getWriter();
 

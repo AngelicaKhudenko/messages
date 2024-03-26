@@ -14,6 +14,7 @@ public class SessionUtils {
      * @param userDTO - пользователь для сохранения
      */
     public static void saveUser(HttpSession httpSession, UserDTO userDTO){
+
         if (httpSession==null){
             throw new IllegalStateException("Сессия отсутствует");
         }
@@ -27,6 +28,7 @@ public class SessionUtils {
      * @return - пользователь UserDTO
      */
     public static Optional<UserDTO> giveUser(HttpSession httpSession){
+
         if (httpSession==null){
             throw new IllegalStateException("Сессия отсутствует");
         }

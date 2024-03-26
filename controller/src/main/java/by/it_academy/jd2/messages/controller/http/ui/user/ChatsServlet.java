@@ -22,17 +22,16 @@ public class ChatsServlet extends HttpServlet {
     private static final String AUTHORIZATION_MISTAKE_MESSAGE="Не выполнен вход в программу. Необходимо авторизоваться";
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req,
+                         HttpServletResponse resp) throws ServletException, IOException {
 
         Optional<UserDTO> optional=SessionUtils.giveUser(req.getSession());
-        List<MessageDTO> messages=null;
 
-        if (optional.isPresent()){
-            UserDTO userDTO=optional.get();
-            messages=messageService.getByUser(userDTO.getLogin());
-        } else {
+        if (optional.isEmpty()){
             throw new UnauthorizedException(AUTHORIZATION_MISTAKE_MESSAGE);
         }
+
+        List<MessageDTO> messages=messageService.getByUser(optional.get().getLogin());
 
         req.setAttribute("messages",messages);
 

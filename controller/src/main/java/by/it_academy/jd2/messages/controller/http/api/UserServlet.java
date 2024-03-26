@@ -22,7 +22,7 @@ public class UserServlet extends HttpServlet {
     private final static String BIRTH_PARAM_NAME="birth";
 
     private final IUserService userService=ServiceFactory.getUserService();
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final static DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     protected void doPost(HttpServletRequest req,
@@ -45,7 +45,6 @@ public class UserServlet extends HttpServlet {
         RegistrationUserDTO user=new RegistrationUserDTO(login,password,names,birthDay);
 
         userService.create(user);
-
         resp.setStatus(201);
     }
 }

@@ -1,17 +1,12 @@
 package by.it_academy.jd2.messages.dao;
 
 import by.it_academy.jd2.messages.core.dto.StatisticsDTO;
-import by.it_academy.jd2.messages.dao.api.IMessageDao;
 import by.it_academy.jd2.messages.dao.api.IStatisticsDao;
-import by.it_academy.jd2.messages.dao.api.IUserDao;
-import by.it_academy.jd2.messages.dao.factory.DaoFactory;
 
 public class StatisticsDao implements IStatisticsDao {
-    private Long messages;
-    private Long users;
-    private Long activeUsers;
-    private final IUserDao userDao=DaoFactory.getUserDao();
-    private final IMessageDao messageDao=DaoFactory.getMessageDao();
+    private volatile Long  messages;
+    private volatile Long users;
+    private volatile Long activeUsers;
 
     public StatisticsDao(Long messages, Long users, Long activeUsers) {
         this.messages = messages;
@@ -30,25 +25,25 @@ public class StatisticsDao implements IStatisticsDao {
         return StatisticsDTO.builder().users(this.users).messages(this.messages).activeUsers(this.activeUsers).build();
     }
 
-    public void addMessage(){
+    public synchronized void addMessage(){
         this.messages++;
     }
 
-    public void addUser(){
+    public synchronized void addUser(){
         this.users++;
     }
-    public void addActiveUser(){
+    public synchronized void addActiveUser(){
         this.activeUsers++;
     }
 
-    public void removeMessage(){
+    public synchronized void removeMessage(){
         this.messages--;
     }
 
-    public void removeUser(){
+    public synchronized void removeUser(){
         this.users--;
     }
-    public void removeActiveUser(){
+    public synchronized void removeActiveUser(){
         this.activeUsers--;
     }
 }
